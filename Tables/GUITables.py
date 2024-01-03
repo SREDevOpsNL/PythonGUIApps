@@ -21,22 +21,37 @@ root.minsize(1652, 326)
 
 # Create a Frame for the Entry widgets
 entry_frame = tkinter.Frame(root)
-entry_frame.pack(fill='x') # Pack manager to put the frame at the top of the root window
-
 button: tkinter.Button = None
 
 # Function to handle Enter key press
 def on_enter(event):
     button.invoke()
 
+# Create a new Frame for labels and entries
+label_entry_frame = tkinter.Frame(root)
+#label_entry_frame.pack(fill='both', expand=True)
+label_entry_frame.pack(fill='x')
+
+# Configure the grid to expand
+#label_entry_frame.grid_columnconfigure(0, weight=1)
+#label_entry_frame.grid_rowconfigure(0, weight=1)
+
+# Configure the grid to expand
+for i in range(len(df.columns)):
+    label_entry_frame.grid_columnconfigure(i, weight=1)
+label_entry_frame.grid_rowconfigure(0, weight=1)
+label_entry_frame.grid_rowconfigure(1, weight=1)
+
+# Create a Label widget for each column
+for index, column in enumerate(df.columns):
+    label = tkinter.Label(label_entry_frame, text=column)
+    label.grid(row=0, column=index, sticky="ew") # Grid manager to put the label in the first row. Use 'ew' to expand horizontally
+
 # Create an Entry widget for each column
 entries = {}
-for index, column in enumerate(df.columns):
-    label = tkinter.Label(entry_frame, text=column)
-    label.pack(side='left') # Pack manager to put the label to the left of the entry widget
-    entry = tkinter.Entry(entry_frame)
-    entry.pack(side='left') # Pack manager to put the entry widget to the right of the label
-    entry.pack(fill=tkinter.BOTH, expand=1)
+for index, column in enumerate(df.columns): # Loop through each column
+    entry = tkinter.Entry(label_entry_frame) # Create an Entry widget
+    entry.grid(row=1, column=index, sticky="ew") # Grid manager to put the entry in the second row. Use 'ew' to expand horizontally
     entries[column] = entry
     entry.bind('<Return>', on_enter)
 
@@ -51,8 +66,8 @@ def filter_table():
     pt.redraw()
 
 # Button to apply the filters
-button = tkinter.Button(root, text='Filter', command=filter_table)
-button.pack() # Pack manager to put the button at the bottom of the root window
+button = tkinter.Button(label_entry_frame, text='Filter', command=filter_table) # Create a Button widget in the label_entry_frame
+button.grid(row=1, column=len(df.columns), sticky="ew") # Add 'Filter' button to label_entry_frame, to the right of the last entry. Use 'ew' to expand horizontally
 
 # Create a Frame for the table
 table_frame = tkinter.Frame(root)
@@ -60,9 +75,6 @@ table_frame.pack(fill='both', expand=True) # Pack manager to put the frame at th
 
 # Use pandastable to create a table
 pt = pandastable.Table(table_frame, dataframe=df, showtoolbar=False, showstatusbar=False)
-#pt = pandastable.Table(entry_frame, dataframe=df, showtoolbar=True, showstatusbar=True)
-
-counter = 0
 
 # Function to resize the columns via ratio
 def resize_columns():
