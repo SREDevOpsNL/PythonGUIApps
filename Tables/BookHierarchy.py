@@ -10,7 +10,7 @@ class Book:
         self.author = author
         self.synopsis = synopsis
         self.publisher = publisher
-        self.publish_date = datetime.strptime(publish_date, '%Y-%m-%d')
+        self.publish_date = publish_date
         self.page_count = page_count
         self.tags = tags
 

@@ -17,7 +17,7 @@ df = pandas.DataFrame(list)
 root = tkinter.Tk()
 
 # Set the minimum window size
-root.minsize(1212, 326)
+root.minsize(1652, 326)
 
 # Create a Frame for the Entry widgets
 entry_frame = tkinter.Frame(root)
@@ -64,16 +64,19 @@ pt = pandastable.Table(table_frame, dataframe=df, showtoolbar=False, showstatusb
 
 counter = 0
 
-# Function to resize the columns
+# Function to resize the columns via ratio
 def resize_columns():
     width = pt.winfo_width()
     height = pt.winfo_height()
     num_columns = len(pt.model.df.columns)
     if width > num_columns:
-        column_width = width // num_columns
+        # Define the ratio for each column
+        column_ratios = {'title': 1.5, 'author': 0.5, 'synopsis': 2.7, 'publisher': 0.6, 'publish_date': 0.4,'page_count': 0.4, 'tags': 0.85}
         for col in pt.model.df.columns:
-            pt.columnwidths[col] = column_width
+            ratio = column_ratios.get(col, 1)
+            pt.columnwidths[col] = int(width * ratio // num_columns)
         pt.height = height  # Set the height of the table
+
 
 # Bind the function to the <Configure> event of the root window
 root.bind('<Configure>', lambda _: resize_columns())
