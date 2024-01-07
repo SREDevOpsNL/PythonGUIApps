@@ -2,112 +2,14 @@ import pandas
 import tkinter
 from tkinter import ttk
 import pandastable
-import BookHierarchy as bh
+from BookHierarchy import Book, BookList
+import book_data  #Add all the books to the BookList
 
+# Add all the books to the BookList
+book_data.add_books_to_BookList()
 
-Hobbit = {
-    'title': 'The Hobbit',
-    'author': 'J.R.R. Tolkien',
-    'synopsis': 'Synopsis',
-    'publisher': 'George Allen & Unwin',
-    'publish_date': '1937-09-21',
-    'page_count': 310,
-    'tags': ['Fantasy', 'Adventure']
-}
-the1stBook = bh.Book(**Hobbit)
-
-timedelta_to_read = the1stBook.get_reading_time()
-time_hours = timedelta_to_read.seconds//3600
-time_minutes = (timedelta_to_read.seconds//60)%60
-time_str = f"{time_hours} hours and {time_minutes} minutes"
-age = int(abs(the1stBook.get_published_age().days) / 365.25)
-
-StringTimeToReadHobbit = f"It takes {time_str} to read {the1stBook},\nwhich was published {age} years ago."
-
-if bh.BookList.books is None:
-    bh.BookList.books = []
-
-bh.BookList.add(the1stBook)
-
-Fellowship = {
-    'title': 'The Fellowship of the Ring',
-    'author': 'J.R.R. Tolkien',
-    'synopsis': 'Synopsis',
-    'publisher': 'George Allen & Unwin',
-    'publish_date': '1954-07-29',
-    'page_count': 423,
-    'tags': ['Fantasy', 'Adventure']
-}
-bh.BookList.add(bh.Book(**Fellowship))
-
-TwoTowers = {
-    'title': 'The Two Towers',
-    'author': 'J.R.R. Tolkien',
-    'synopsis': 'Synopsis',
-    'publisher': 'George Allen & Unwin',
-    'publish_date': '1954-11-11',
-    'page_count': 352,
-    'tags': ['Fantasy', 'Adventure']
-}
-bh.BookList.add(bh.Book(**TwoTowers))
-
-ReturnOfTheKing = {
-    'title': 'The Return of the King',
-    'author': 'J.R.R. Tolkien',
-    'synopsis': 'Synopsis',
-    'publisher': 'George Allen & Unwin',
-    'publish_date': '1955-10-20',
-    'page_count': 416,
-    'tags': ['Fantasy', 'Adventure']
-}
-bh.BookList.add(bh.Book(**ReturnOfTheKing))
-
-Silmarillion = {
-    'title': 'The Silmarillion',
-    'author': 'J.R.R. Tolkien',
-    'synopsis': 'Collection of mythopoeic tales providing extensive background to Middle-earth.',
-    'publisher': 'George Allen & Unwin',
-    'publish_date': '1977-10-20',
-    'page_count': 365,
-    'tags': ['Fantasy', 'Mythopoeia']
-}
-bh.BookList.add(bh.Book(**Silmarillion))
-
-UnfinishedTales = {
-    'title': 'Unfinished Tales of Númenor and Middle-earth',
-    'author': 'J.R.R. Tolkien',
-    'synopsis': 'Collection of narratives and incomplete stories providing further insight into Middle-earth.',
-    'publisher': 'George Allen & Unwin',
-    'publish_date': '1980-10-21',
-    'page_count': 472,
-    'tags': ['Fantasy', 'Narratives']
-}
-bh.BookList.add(bh.Book(**UnfinishedTales))
-
-ChildrenOfHurin = {
-    'title': 'The Children of Húrin',
-    'author': 'J.R.R. Tolkien',
-    'synopsis': 'Complete and expanded version of a tale found in "The Silmarillion," focusing on the tragic story of Túrin Turambar.',
-    'publisher': 'Houghton Mifflin',
-    'publish_date': '2007-11-22',
-    'page_count': 320,
-    'tags': ['Fantasy', 'Tragedy']
-}
-bh.BookList.add(bh.Book(**ChildrenOfHurin))
-
-FallOfGondolin = {
-    'title': 'The Fall of Gondolin',
-    'author': 'J.R.R. Tolkien',
-    'synopsis': 'Tells the story of the legendary city of Gondolin and its downfall, edited by Christopher Tolkien.',
-    'publisher': 'HarperCollins',
-    'publish_date': '2018-12-23',
-    'page_count': 304,
-    'tags': ['Fantasy', 'Legendary']
-}
-magicDate = '1950-01-01'
-bh.BookList.add(bh.Book(**FallOfGondolin))
-
-list = [book.__dict__ for book in bh.BookList.books]
+# Create a DataFrame from the BookList
+list = [book.__dict__ for book in BookList.books]
 typeOfVar = type(list)
 df = pandas.DataFrame(list)
 
