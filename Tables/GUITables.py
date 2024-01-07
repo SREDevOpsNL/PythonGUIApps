@@ -62,7 +62,50 @@ ReturnOfTheKing = {
 }
 bh.BookList.add(bh.Book(**ReturnOfTheKing))
 
+Silmarillion = {
+    'title': 'The Silmarillion',
+    'author': 'J.R.R. Tolkien',
+    'synopsis': 'Collection of mythopoeic tales providing extensive background to Middle-earth.',
+    'publisher': 'George Allen & Unwin',
+    'publish_date': '1977-10-20',
+    'page_count': 365,
+    'tags': ['Fantasy', 'Mythopoeia']
+}
+bh.BookList.add(bh.Book(**Silmarillion))
+
+UnfinishedTales = {
+    'title': 'Unfinished Tales of Númenor and Middle-earth',
+    'author': 'J.R.R. Tolkien',
+    'synopsis': 'Collection of narratives and incomplete stories providing further insight into Middle-earth.',
+    'publisher': 'George Allen & Unwin',
+    'publish_date': '1980-10-21',
+    'page_count': 472,
+    'tags': ['Fantasy', 'Narratives']
+}
+bh.BookList.add(bh.Book(**UnfinishedTales))
+
+ChildrenOfHurin = {
+    'title': 'The Children of Húrin',
+    'author': 'J.R.R. Tolkien',
+    'synopsis': 'Complete and expanded version of a tale found in "The Silmarillion," focusing on the tragic story of Túrin Turambar.',
+    'publisher': 'Houghton Mifflin',
+    'publish_date': '2007-11-22',
+    'page_count': 320,
+    'tags': ['Fantasy', 'Tragedy']
+}
+bh.BookList.add(bh.Book(**ChildrenOfHurin))
+
+FallOfGondolin = {
+    'title': 'The Fall of Gondolin',
+    'author': 'J.R.R. Tolkien',
+    'synopsis': 'Tells the story of the legendary city of Gondolin and its downfall, edited by Christopher Tolkien.',
+    'publisher': 'HarperCollins',
+    'publish_date': '2018-12-23',
+    'page_count': 304,
+    'tags': ['Fantasy', 'Legendary']
+}
 magicDate = '1950-01-01'
+bh.BookList.add(bh.Book(**FallOfGondolin))
 
 list = [book.__dict__ for book in bh.BookList.books]
 typeOfVar = type(list)
@@ -71,18 +114,12 @@ df = pandas.DataFrame(list)
 # Create a root window and immediately hide it
 root = tkinter.Tk()
 
-# # Create a Frame
-# frame = tkinter.Frame(root)
-# frame.pack(fill='both', expand=True)
-
-# # Use pandastable to create a table
-# pt = pandastable.Table(frame, dataframe=df, showtoolbar=True, showstatusbar=True)
-# #pt.enable_sorting()
-# pt.show()
+# Set the minimum window size
+root.minsize(1212, 326)
 
 # Create a Frame for the Entry widgets
 entry_frame = tkinter.Frame(root)
-entry_frame.pack(fill='x')
+entry_frame.pack(fill='x') # Pack manager to put the frame at the top of the root window
 
 button: tkinter.Button = None
 
@@ -92,11 +129,12 @@ def on_enter(event):
 
 # Create an Entry widget for each column
 entries = {}
-for column in df.columns:
+for index, column in enumerate(df.columns):
     label = tkinter.Label(entry_frame, text=column)
-    label.pack(side='left')
+    label.pack(side='left') # Pack manager to put the label to the left of the entry widget
     entry = tkinter.Entry(entry_frame)
-    entry.pack(side='left')
+    entry.pack(side='left') # Pack manager to put the entry widget to the right of the label
+    entry.pack(fill=tkinter.BOTH, expand=1)
     entries[column] = entry
     entry.bind('<Return>', on_enter)
 
@@ -112,23 +150,34 @@ def filter_table():
 
 # Button to apply the filters
 button = tkinter.Button(root, text='Filter', command=filter_table)
-button.pack()
+button.pack() # Pack manager to put the button at the bottom of the root window
 
 # Create a Frame for the table
 table_frame = tkinter.Frame(root)
-table_frame.pack(fill='both', expand=True)
+table_frame.pack(fill='both', expand=True) # Pack manager to put the frame at the bottom of the root window
 
 # Use pandastable to create a table
-pt = pandastable.Table(table_frame, dataframe=df, showtoolbar=True, showstatusbar=True)
+pt = pandastable.Table(table_frame, dataframe=df, showtoolbar=False, showstatusbar=False)
+#pt = pandastable.Table(entry_frame, dataframe=df, showtoolbar=True, showstatusbar=True)
+
+counter = 0
+
+# Function to resize the columns
+def resize_columns():
+    width = pt.winfo_width()
+    height = pt.winfo_height()
+    num_columns = len(pt.model.df.columns)
+    if width > num_columns:
+        column_width = width // num_columns
+        for col in pt.model.df.columns:
+            pt.columnwidths[col] = column_width
+        pt.height = height  # Set the height of the table
+
+# Bind the function to the <Configure> event of the root window
+root.bind('<Configure>', lambda _: resize_columns())
+
+# Show the table in the table_frame 
 pt.show()
 
 # Run the tkinter main loop
 root.mainloop()
-
-# "The Silmarillion" (1977) - This book contains Tolkien's mythopoeic tales, providing extensive background and history to the world of Middle-earth.
-
-# "Unfinished Tales of Númenor and Middle-earth" (1980) - A collection of narratives and stories that were incomplete or unpublished during Tolkien's lifetime, offering further insight into Middle-earth's history.
-
-# "The Children of Húrin" (2007) - This novel presents a complete and expanded version of one of the tales found in "The Silmarillion," focusing on the tragic story of Túrin Turambar.
-
-# "The Fall of Gondolin" (2018) - Edited by Christopher Tolkien, this book delves into the story of the legendary city of Gondolin, showcasing its downfall.
