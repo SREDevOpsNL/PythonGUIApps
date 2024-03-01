@@ -13,3 +13,23 @@ A new frame is created to hold the labels and entries for each column in the Dat
 The `filter_table` function is used to filter the DataFrame based on the user's input in the entry widgets. For each entry, if a value is present, the DataFrame is filtered to only include rows where the corresponding column contains that value. The table is then updated with the filtered DataFrame.
 
 Finally, a button is created to apply the filters. When clicked, it calls the `filter_table` function.
+
+# WebTables_SimpleTable Application
+
+This application is a Flask web application that displays a list of books. The books are defined in the `BookHierarchy.py` and `book_data.py` files and displayed using the `app.py` file.
+
+## BookHierarchy.py
+
+This file defines the `Book` and `BookList` classes. The `Book` class represents a single book, with properties such as title, author, and reading time. The `BookList` class is a collection of `Book` objects.
+
+## book_data.py
+
+This file is responsible for adding books to the `BookList`. It defines a function `add_books_to_BookList` that creates new `Book` objects and adds them to the `BookList`.
+
+## app.py
+
+This is the main file of the Flask application. It defines a single route, the home route (`/`), which can handle `GET` requests.
+
+When a request is made to the home route, the `add_books_to_BookList` function is called to add all the books to the `BookList`. `books_df` DataFrame is created from a list of Book objects. Each Book object is converted to a dictionary using book.__dict__, and these dictionaries are used to create the DataFrame. This is done using a list comprehension.
+
+Finally, the list of books is passed to the `index.html` template using the `render_template` function. This template is responsible for displaying the list of books on the web page.
