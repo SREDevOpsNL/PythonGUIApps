@@ -3,9 +3,9 @@ from BookHierarchy import Book, BookList
 import book_data
 import pandas as pd
 
-app = Flask(__name__)
+WebTables = Flask(__name__)
 
-@app.route('/', methods=['GET'])
+@WebTables.route('/', methods=['GET'])
 def home():
 
     # Add all the books to the BookList
@@ -18,4 +18,4 @@ def home():
     return render_template('index.html', table=books_df.to_html(), columns=books_df.columns.values)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    WebTables.run(debug=True, host='0.0.0.0')
